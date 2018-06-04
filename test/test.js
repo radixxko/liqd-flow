@@ -1,35 +1,23 @@
-const Flow = require('../lib/flow');
-const http = require('http');
+'use strict';
 
-function render()
+const fs = require('fs');
+
+describe( 'Tests', ( done ) =>
 {
-	console.log( `render requestID is ${Flow.get('requestID')}` );
+	var files = fs.readdirSync( __dirname + '/tests' );
 
-	return new Promise( resolve =>
+	describe( 'nonexisting.js', () =>
 	{
-		setTimeout( () =>
-		{
-			resolve( `Hello ${Flow.get('requestID')}` );
-		})
+		require( __dirname + '/tests/nonexisting' );
 	});
-}
 
-async function dispatch( req, res )
-{
-	res.end( await render() );
-
-	console.log( `dispatch requestID is ${Flow.get('requestID')}` );
-}
-
-function startServer()
-{
-	var requestID = 0;
-
-	http.createServer( ( req, res ) =>
+	for( let file of files )
 	{
-		Flow.start( dispatch.bind(null, req, res), { requestID: ++requestID } );
-	})
-	.listen(8082);
-}
+		if( file === 'nonexisting.js' || !file.match(/\.js$/) ){ continue; }
 
-startServer();
+		describe( file, () =>
+		{
+			require( __dirname + '/tests/' + file );
+		});
+	}
+});
