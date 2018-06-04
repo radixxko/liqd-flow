@@ -11,37 +11,37 @@ This library allows you to create custom asynchronous flow contexts and access i
 Let's illustrate Flow functionality on a simple http server:
 
 ```js
-const Flow = require('liqd-flow');	// load Flow library
+const Flow = require('liqd-flow'); // load Flow library
 
 let requestID = 0;
 
 const server = require('http').createServer( ( req, res ) =>
 {
-	// Start a new flow in request handler
-	Flow.start( () =>
-	{
-		dispatch( req.url ).then( result => res.end( result ));
-	},
-	// and set its variables
-	{
-		start: process.hrtime(),
-		requestID: ++requestID
-	});
+  // Start a new flow in request handler
+  Flow.start( () =>
+  {
+    dispatch( req.url ).then( result => res.end( result ));
+  },
+  // and set its variables
+  {
+    start: process.hrtime(),
+    requestID: ++requestID
+  });
 })
-.listen(8080)
+.listen(8080);
 
 async function dispatch( url )
 {
-	Flow.set( 'url', url ); // Set a new variable in our Flow
+  Flow.set( 'url', url ); // Set a new variable in our Flow
 
-	let data = await Model.getData( url );
+  let data = await Model.getData( url );
 
-	return
-	{
-		data: data,
-		elapsed: process.hrtime( Flow.get( 'start' ) ),	// get process.hrtime() from current Flow (server request handler)
-		requestID: Flow.get( 'requestID' )				// get requestID incremented in  current Flow (server request handler)
-	};
+  return
+  {
+    data,
+    elapsed: process.hrtime( Flow.get( 'start' ) ), // get process.hrtime() from current Flow (server request handler)
+    requestID: Flow.get( 'requestID' )              // get requestID incremented in  current Flow (server request handler)
+  };
 }
 ```
 
@@ -95,7 +95,7 @@ Returns the current scope of the Flow, object containing every key set in the Fl
 
 ```js
 {
-	[key] : { value, frozen }
+  [key] : { value, frozen }
 }
 ```
 
