@@ -39,8 +39,8 @@ async function dispatch( url )
   return
   {
     data,
-    elapsed: process.hrtime( Flow.get( 'start' ) ), // get process.hrtime() from current Flow (server request handler)
-    requestID: Flow.get( 'requestID' )              // get requestID incremented in  current Flow (server request handler)
+    elapsed: process.hrtime( Flow.get( 'start' ) ), // get process.hrtime() from the current Flow (server request handler)
+    requestID: Flow.get( 'requestID' )              // get requestID incremented in the current Flow (server request handler)
   };
 }
 ```
