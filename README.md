@@ -4,6 +4,10 @@
 [![Build Status](https://travis-ci.org/radixxko/liqd-flow.svg?branch=master)](https://travis-ci.org/radixxko/liqd-flow)
 [![Coverage Status](https://coveralls.io/repos/github/radixxko/liqd-flow/badge.svg?branch=master)](https://coveralls.io/github/radixxko/liqd-flow?branch=master)
 
+## Warning
+
+Flow library does not work properly when using async/await on Promises with node v10.* due to bug in V8 engine.
+
 ## Sneak Peek
 
 This library allows you to create custom asynchronous flow contexts and access its variables in every step of the flow execution.
@@ -60,32 +64,34 @@ npm install --save liqd-flow
 
 ### static start( callback[, scope = {}[, freeze = true]] )
 
+Starts a new Flow and sets its scope object.
+
 - `callback` {Function} Callback executed in a newly created Flow
 - `scope` {Object} Scope assigned to the Flow
 	- defaults to {Object} empty object `{}`
 - `freeze` {Boolean} If set to true scope variables are frozen to prevent changes in the Flow
 	- defaults to {Boolean} `true`
 
-Starts a new Flow and sets its scope object.
-
 ### static set( key, value[, freeze = true] )
+
+Sets value for the key in the current Flow if key is not frozen.
 
 - `key` {Any} Key
 - `value` {Any} Value
 - `freeze` {Boolean} If set to true value for key will be frozen to prevent changes in the Flow
 	- defaults to {Boolean} `true`
 
-Sets value for the key in the current Flow if key is not frozen.
-
 Returns {Boolean}
-	- `true` - value has been set for the key which was not frozen
-	- `false` - key was frozen and variable have not been changed
+- `true` value has been set for the key which was not frozen
+- `false` key was frozen and variable have not been changed
 
-### static get( key )
+### static get( key[, default_value = undefined] )
+
+Returns value for the key in the current Flow, `default` if the key is not set.
 
 - `key` {Any} Key
-
-Returns value for the key in the current Flow, `undefined` if the key is not set.
+- `default_value` {Any} Value returned if the key is not set
+	- defaults to `undefined`
 
 Returns {Any}
 

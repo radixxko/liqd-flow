@@ -8,6 +8,8 @@ const Flow = require('../../lib/flow');
 
 it( 'Request handler', ( done ) =>
 {
+	let next = { callback: done, ready: false }; Next( next );
+
 	let responseID = 0;
 
 	const server = http.createServer( ( req, res ) =>
@@ -68,7 +70,7 @@ it( 'Request handler', ( done ) =>
 
 					if( responseIDs.size === requestsCnt )
 					{
-						server.close( done );
+						server.close( () => { next.ready = true; } );
 					}
 				});
 			});

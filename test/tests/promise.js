@@ -7,118 +7,109 @@ const Flow = require('../../lib/flow');
 
 it( 'Promise-then', ( done ) =>
 {
-	setImmediate( () =>
+	let next = { callback: done, ready: false }; Next( next );
+
+	const flowValue = Math.random();
+
+	Flow.start( () =>
 	{
 		verifyFlowID();
 
-		const flowValue = Math.random();
-
-		Flow.start( () =>
+		(new Promise( ( resolve, reject ) =>
 		{
 			verifyFlowID();
 
-			(new Promise( ( resolve, reject ) =>
-			{
-				verifyFlowID();
+			assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside promise executor');
 
-				assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside promise executor');
-
-				resolve( Flow.get('flowValue') );
-			}))
-			.then( v =>
-			{
-				verifyFlowID();
-
-				assert.strictEqual( flowValue, v, 'Flow value resolve mismatch');
-				assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value then mismatch');
-
-				done();
-			});
-		},
+			resolve( Flow.get('flowValue') );
+		}))
+		.then( v =>
 		{
-			flowValue
+			verifyFlowID();
+
+			assert.strictEqual( flowValue, v, 'Flow value resolve mismatch');
+			assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value then mismatch');
+
+			next.ready = true;
 		});
+	},
+	{
+		flowValue
 	});
 });
 
 it( 'Promise-catch', ( done ) =>
 {
-	setImmediate( () =>
+	let next = { callback: done, ready: false }; Next( next );
+
+	const flowValue = Math.random();
+
+	Flow.start( () =>
 	{
 		verifyFlowID();
 
-		const flowValue = Math.random();
-
-		Flow.start( () =>
+		(new Promise( ( resolve, reject ) =>
 		{
 			verifyFlowID();
 
-			(new Promise( ( resolve, reject ) =>
-			{
-				verifyFlowID();
+			assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside promise executor');
 
-				assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside promise executor');
-
-				reject( Flow.get('flowValue') );
-			}))
-			.then( v => v )
-			.catch( v =>
-			{
-				verifyFlowID();
-
-				assert.strictEqual( flowValue, v, 'Flow value reject mismatch');
-				assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value catch mismatch');
-
-				done();
-			});
-		},
+			reject( Flow.get('flowValue') );
+		}))
+		.then( v => v )
+		.catch( v =>
 		{
-			flowValue
+			verifyFlowID();
+
+			assert.strictEqual( flowValue, v, 'Flow value reject mismatch');
+			assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value catch mismatch');
+
+			next.ready = true;
 		});
+	},
+	{
+		flowValue
 	});
 });
 
 it( 'Promise-await', ( done ) =>
 {
-	setImmediate( () =>
+	let next = { callback: done, ready: false }; Next( next );
+
+	const flowValue = Math.random();
+
+	Flow.start( async() =>
 	{
 		verifyFlowID();
 
-		const flowValue = Math.random();
-
-		Flow.start( async() =>
+		let promise = new Promise( ( resolve, reject ) =>
 		{
 			verifyFlowID();
 
-			let promise = new Promise( ( resolve, reject ) =>
+			assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside promise executor');
+
+			setTimeout( () =>
 			{
 				verifyFlowID();
 
-				assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside promise executor');
+				assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside timeout');
 
-				setTimeout( () =>
-				{
-					verifyFlowID();
-
-					assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside timeout');
-
-					resolve();
-				},
-				10);
-			});
-
-			assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch before await');
-
-			await promise;
-
-			verifyFlowID();
-
-			assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch after await');
-
-			done();
-		},
-		{
-			flowValue
+				resolve();
+			},
+			10);
 		});
+
+		assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch before await');
+
+		await promise;
+
+		verifyFlowID();
+
+		assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch after await');
+
+		next.ready = true;
+	},
+	{
+		flowValue
 	});
 });

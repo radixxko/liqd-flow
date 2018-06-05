@@ -7,50 +7,47 @@ const Flow = require('../../lib/flow');
 
 it( 'Types + scope', ( done ) =>
 {
-	setImmediate( () =>
+	let next = { callback: done, ready: false }; Next( next );
+
+	let scope = { foo: 'bar', int: 10, obj: { foo: 'bar' }, arr: [ 'foo', 'bar' ] };
+
+	Flow.start( () =>
 	{
 		verifyFlowID();
 
-		let scope = { foo: 'bar', int: 10, obj: { foo: 'bar' }, arr: [ 'foo', 'bar' ] };
+		assert.strictEqual( scope.foo, Flow.get('foo'), 'Flow string value mismatch');
+		assert.strictEqual( scope.int, Flow.get('int'), 'Flow int value mismatch');
+		assert.strictEqual( scope.obj, Flow.get('obj'), 'Flow object value mismatch');
+		assert.strictEqual( scope.arr, Flow.get('arr'), 'Flow array value mismatch');
 
-		Flow.start( () =>
+		setTimeout( () =>
 		{
 			verifyFlowID();
 
-			assert.strictEqual( scope.foo, Flow.get('foo'), 'Flow string value mismatch');
-			assert.strictEqual( scope.int, Flow.get('int'), 'Flow int value mismatch');
-			assert.strictEqual( scope.obj, Flow.get('obj'), 'Flow object value mismatch');
-			assert.strictEqual( scope.arr, Flow.get('arr'), 'Flow array value mismatch');
+			assert.strictEqual( scope.foo, Flow.get('foo'), 'Flow string value mismatch inside timeout');
+			assert.strictEqual( scope.int, Flow.get('int'), 'Flow int value mismatch inside timeout');
+			assert.strictEqual( scope.obj, Flow.get('obj'), 'Flow object value mismatch inside timeout');
+			assert.strictEqual( scope.arr, Flow.get('arr'), 'Flow array value mismatch inside timeout');
 
-			setTimeout( () =>
-			{
-				verifyFlowID();
+			let flow_scope = Flow.scope();
 
-				assert.strictEqual( scope.foo, Flow.get('foo'), 'Flow string value mismatch inside timeout');
-				assert.strictEqual( scope.int, Flow.get('int'), 'Flow int value mismatch inside timeout');
-				assert.strictEqual( scope.obj, Flow.get('obj'), 'Flow object value mismatch inside timeout');
-				assert.strictEqual( scope.arr, Flow.get('arr'), 'Flow array value mismatch inside timeout');
+			assert.deepStrictEqual( Object.keys( scope ), Object.keys( flow_scope ), 'Not identical scope');
 
-				let flow_scope = Flow.scope();
+			assert.strictEqual( scope.foo, flow_scope.foo.value, 'Flow scope string value mismatch');
+			assert.ok( flow_scope.foo.frozen === true, 'Flow scope string value not frozen');
 
-				assert.deepStrictEqual( Object.keys( scope ), Object.keys( flow_scope ), 'Not identical scope');
+			assert.strictEqual( scope.int, flow_scope.int.value, 'Flow scope int value mismatch');
+			assert.ok( flow_scope.int.frozen === true, 'Flow scope int value not frozen');
 
-				assert.strictEqual( scope.foo, flow_scope.foo.value, 'Flow scope string value mismatch');
-				assert.ok( flow_scope.foo.frozen === true, 'Flow scope string value not frozen');
+			assert.strictEqual( scope.obj, flow_scope.obj.value, 'Flow scope object value mismatch');
+			assert.ok( flow_scope.obj.frozen === true && Object.isFrozen( flow_scope.obj.value ), 'Flow scope object value not frozen');
 
-				assert.strictEqual( scope.int, flow_scope.int.value, 'Flow scope int value mismatch');
-				assert.ok( flow_scope.int.frozen === true, 'Flow scope int value not frozen');
+			assert.strictEqual( scope.arr, flow_scope.arr.value, 'Flow scope array value mismatch');
+			assert.ok( flow_scope.arr.frozen === true && Object.isFrozen( flow_scope.arr.value ), 'Flow scope array value not frozen');
 
-				assert.strictEqual( scope.obj, flow_scope.obj.value, 'Flow scope object value mismatch');
-				assert.ok( flow_scope.obj.frozen === true && Object.isFrozen( flow_scope.obj.value ), 'Flow scope object value not frozen');
-
-				assert.strictEqual( scope.arr, flow_scope.arr.value, 'Flow scope array value mismatch');
-				assert.ok( flow_scope.arr.frozen === true && Object.isFrozen( flow_scope.arr.value ), 'Flow scope array value not frozen');
-
-				done();
-			},
-			10 );
+			next.ready = true;
 		},
-		scope );
-	});
+		10 );
+	},
+	scope );
 });
