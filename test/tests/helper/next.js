@@ -1,6 +1,6 @@
 'use strict';
 
-let queue = [], emptied = (new Date()).getTime();
+let queue = [], emptied = (new Date()).getTime() + 10000;
 
 function check()
 {
@@ -20,7 +20,7 @@ function check()
 		callback();
 	}
 
-	if( (new Date()).getTime() - emptied < 500 ){ setTimeout( check, 10 ); }
+	if( (new Date()).getTime() - emptied < 5000 ){ setTimeout( check, 10 ); }
 }
 
 check();
