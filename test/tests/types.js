@@ -17,8 +17,15 @@ it( 'Types + scope', ( done ) =>
 
 		assert.strictEqual( scope.foo, Flow.get('foo'), 'Flow string value mismatch');
 		assert.strictEqual( scope.int, Flow.get('int'), 'Flow int value mismatch');
-		assert.strictEqual( scope.obj, Flow.get('obj'), 'Flow object value mismatch');
-		assert.strictEqual( scope.arr, Flow.get('arr'), 'Flow array value mismatch');
+		assert.deepStrictEqual( scope.obj, Flow.get('obj'), 'Flow object value mismatch');
+		assert.deepStrictEqual( scope.arr, Flow.get('arr'), 'Flow array value mismatch');
+
+		assert.deepStrictEqual( scope.obj, Flow.getPath('obj'), 'Flow object getPath value mismatch');
+		assert.strictEqual( scope.obj.foo, Flow.getPath('obj.foo'), 'Flow object getPath value mismatch');
+		assert.strictEqual( scope.obj.foo, Flow.getPath('obj|foo', null, '|'), 'Flow object getPath value mismatch');
+		assert.strictEqual( scope.obj.foo, Flow.getPath(['obj','foo']), 'Flow object getPath value mismatch');
+		assert.strictEqual( 'missing', Flow.getPath('obj.foo.bar', 'missing'), 'Flow object getPath value mismatch');
+		assert.strictEqual( 'missing', Flow.getPath('test.foo.bar', 'missing'), 'Flow object getPath value mismatch');
 
 		setTimeout( () =>
 		{
@@ -26,8 +33,8 @@ it( 'Types + scope', ( done ) =>
 
 			assert.strictEqual( scope.foo, Flow.get('foo'), 'Flow string value mismatch inside timeout');
 			assert.strictEqual( scope.int, Flow.get('int'), 'Flow int value mismatch inside timeout');
-			assert.strictEqual( scope.obj, Flow.get('obj'), 'Flow object value mismatch inside timeout');
-			assert.strictEqual( scope.arr, Flow.get('arr'), 'Flow array value mismatch inside timeout');
+			assert.deepStrictEqual( scope.obj, Flow.get('obj'), 'Flow object value mismatch inside timeout');
+			assert.deepStrictEqual( scope.arr, Flow.get('arr'), 'Flow array value mismatch inside timeout');
 
 			let flow_scope = Flow.scope();
 

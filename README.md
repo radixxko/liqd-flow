@@ -87,11 +87,23 @@ Returns {Boolean}
 
 ### static get( key[, default_value = undefined] )
 
-Returns value for the key in the current Flow, `default` if the key is not set.
+Returns value for the key in the current Flow, `default_value` if the key is not set.
 
 - `key` {Any} Key
 - `default_value` {Any} Value returned if the key is not set
 	- defaults to `undefined`
+
+Returns {Any}
+
+### static getPath( path[, default_value = undefined[, path_delimiter = '.']] )
+
+Returns value for the path in the current Flow, `default_value` if the path is not set.
+
+- `path` {Array of Strings | String} path
+- `default_value` {Any} Value returned if the key is not set
+	- defaults to `undefined`
+- `path_delimiter` {String} Path delimiter if path is {String}
+	- defaults to `'.'`
 
 Returns {Any}
 
