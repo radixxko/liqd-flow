@@ -6,7 +6,7 @@
 
 ## Warning
 
-Flow library does not work properly when using async/await on Promises with node v10.* due to bug in V8 engine.
+Flow library does not work properly when using async/await on Promises with node v10.0 - v10.3 due to bug in V8 engine.
 
 ## Sneak Peek
 
