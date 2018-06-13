@@ -112,7 +112,7 @@ Returns value for the key in the current Flow, `default_value` if the key is not
 Returns {Any}
 
 ```js
-let foo = Flow.getPath('foo');
+let foo = Flow.get('foo');
 ```
 
 ### static getPath( path[, default_value = undefined[, path_delimiter = '.']] )
