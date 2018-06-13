@@ -175,3 +175,22 @@ flow_handle.restore( () =>
 	// Flow is restored
 });
 ```
+
+### static bind( callback )
+
+Binds the current Flow to callback function, callback can be executed outside of current flow yet the original Flow is automaticaly restored.
+
+```js
+let callback;
+
+Flow.start( () =>
+{
+	callback = Flow.bind( () =>
+	{
+		let foo = Flow.get('foo'); // returns 'bar'
+	});
+},
+{ foo: 'bar' });
+
+setTimeout( callback, 1000 ); // Executes callback outside of its Flow
+```
