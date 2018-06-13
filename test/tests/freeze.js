@@ -152,7 +152,7 @@ it( 'Setting values', ( done ) =>
 	Flow.start( () =>
 	{
 		verifyFlowID();
-		
+
 		setTimeout( () =>
 		{
 			verifyFlowID();

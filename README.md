@@ -118,3 +118,17 @@ Returns the current scope of the Flow, object containing every key set in the Fl
 ```
 
 Returns {Object}
+
+### static save()
+
+Returns the current Flow handle for later restoration.
+
+Returns {FlowHandle}
+
+### static restore( FlowHandle, callback )
+
+Restores the stored Flow and dispatches the callback. Flow can be restored by calling restore method on FlowHandle as well. Each FlowHandle can be restored only once.
+
+```js
+flow_handle.restore( callback );
+```

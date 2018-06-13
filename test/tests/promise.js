@@ -9,107 +9,154 @@ it( 'Promise-then', ( done ) =>
 {
 	let next = { callback: done, ready: false }; Next( next );
 
-	const flowValue = Math.random();
+	let cnt = 100, resolved = 0;
 
-	Flow.start( () =>
+	function createPromise()
 	{
-		verifyFlowID();
+		const flowValue = Math.random();
 
-		(new Promise( ( resolve, reject ) =>
+		Flow.start( () =>
 		{
 			verifyFlowID();
 
-			assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside promise executor');
+			(new Promise( ( resolve, reject ) =>
+			{
+				verifyFlowID();
 
-			resolve( Flow.get('flowValue') );
-		}))
-		.then( v =>
+				assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside promise executor');
+
+				setTimeout( () =>
+				{
+					resolve( Flow.get('flowValue') );
+				},
+				Math.ceil( Math.random() * 750 ) );
+			}))
+			.then( v =>
+			{
+				verifyFlowID();
+
+				assert.strictEqual( flowValue, v, 'Flow value resolve mismatch');
+				assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value then mismatch');
+
+				if( ++resolved === cnt )
+				{
+					next.ready = true;
+				}
+			});
+		},
 		{
-			verifyFlowID();
-
-			assert.strictEqual( flowValue, v, 'Flow value resolve mismatch');
-			assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value then mismatch');
-
-			next.ready = true;
+			flowValue
 		});
-	},
+	}
+
+	for( let i = 0; i < cnt; ++i )
 	{
-		flowValue
-	});
+		createPromise();
+	}
 });
 
 it( 'Promise-catch', ( done ) =>
 {
 	let next = { callback: done, ready: false }; Next( next );
 
-	const flowValue = Math.random();
+	let cnt = 100, resolved = 0;
 
-	Flow.start( () =>
+	function createPromise()
 	{
-		verifyFlowID();
+		const flowValue = Math.random();
 
-		(new Promise( ( resolve, reject ) =>
+		Flow.start( () =>
 		{
 			verifyFlowID();
 
-			assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside promise executor');
+			(new Promise( ( resolve, reject ) =>
+			{
+				verifyFlowID();
 
-			reject( Flow.get('flowValue') );
-		}))
-		.then( v => v )
-		.catch( v =>
+				assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside promise executor');
+
+				setTimeout( () =>
+				{
+					reject( Flow.get('flowValue') );
+				},
+				Math.ceil( Math.random() * 750 ) );
+			}))
+			.then( v => v )
+			.catch( v =>
+			{
+				verifyFlowID();
+
+				assert.strictEqual( flowValue, v, 'Flow value reject mismatch');
+				assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value catch mismatch');
+
+				if( ++resolved === cnt )
+				{
+					next.ready = true;
+				}
+			});
+		},
 		{
-			verifyFlowID();
-
-			assert.strictEqual( flowValue, v, 'Flow value reject mismatch');
-			assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value catch mismatch');
-
-			next.ready = true;
+			flowValue
 		});
-	},
+	}
+
+	for( let i = 0; i < cnt; ++i )
 	{
-		flowValue
-	});
+		createPromise();
+	}
 });
 
 it( 'Promise-await', ( done ) =>
 {
 	let next = { callback: done, ready: false }; Next( next );
 
-	const flowValue = Math.random();
+	let cnt = 100, resolved = 0;
 
-	Flow.start( async() =>
+	function createPromise()
 	{
-		verifyFlowID();
+		const flowValue = Math.random();
 
-		let promise = new Promise( ( resolve, reject ) =>
+		Flow.start( async() =>
 		{
 			verifyFlowID();
 
-			assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside promise executor');
-
-			setTimeout( () =>
+			let promise = new Promise( ( resolve, reject ) =>
 			{
 				verifyFlowID();
 
-				assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside timeout');
+				assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside promise executor');
 
-				resolve();
-			},
-			10);
+				setTimeout( () =>
+				{
+					verifyFlowID();
+
+					assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch inside timeout');
+
+					resolve();
+				},
+				Math.ceil( Math.random() * 750 ));
+			});
+
+			assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch before await');
+
+			await promise;
+
+			verifyFlowID();
+
+			assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch after await');
+
+			if( ++resolved === cnt )
+			{
+				next.ready = true;
+			}
+		},
+		{
+			flowValue
 		});
+	}
 
-		assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch before await');
-
-		await promise;
-
-		verifyFlowID();
-
-		assert.strictEqual( flowValue, Flow.get('flowValue'), 'Flow value mismatch after await');
-
-		next.ready = true;
-	},
+	for( let i = 0; i < cnt; ++i )
 	{
-		flowValue
-	});
+		createPromise();
+	}
 });
