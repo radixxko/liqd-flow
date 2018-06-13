@@ -72,6 +72,16 @@ Starts a new Flow and sets its scope object.
 - `freeze` {Boolean} If set to true scope variables are frozen to prevent changes in the Flow
 	- defaults to {Boolean} `true`
 
+```js
+Flow.start( () =>
+{
+	// Callback is executed inside Flow scope
+
+	let foo = Flow.get('foo'); // returns 'bar';
+},
+{ foo: 'bar' }); // Sets the Flow scope
+```
+
 ### static set( key, value[, freeze = true] )
 
 Sets value for the key in the current Flow if key is not frozen.
@@ -85,6 +95,12 @@ Returns {Boolean}
 - `true` value has been set for the key which was not frozen
 - `false` key was frozen and variable have not been changed
 
+```js
+Flow.set('foo', 'bar', false); // Sets the value inside Flow, returns true
+Flow.set('foo', 'boo', true); // Rewrites the value, returns true
+Flow.set('foo', 'goo'); // Does not rewrite the value, returns false
+```
+
 ### static get( key[, default_value = undefined] )
 
 Returns value for the key in the current Flow, `default_value` if the key is not set.
@@ -94,6 +110,10 @@ Returns value for the key in the current Flow, `default_value` if the key is not
 	- defaults to `undefined`
 
 Returns {Any}
+
+```js
+let foo = Flow.getPath('foo');
+```
 
 ### static getPath( path[, default_value = undefined[, path_delimiter = '.']] )
 
@@ -107,17 +127,26 @@ Returns value for the path in the current Flow, `default_value` if the path is n
 
 Returns {Any}
 
+```js
+let foo = Flow.getPath('obj.foo');
+let bar = Flow.getPath('obj|bar', null, '|');
+```
+
 ### static scope()
 
 Returns the current scope of the Flow, object containing every key set in the Flow with its value and frozen state.
 
+Returns {Object}
+
 ```js
+let scope = Flow.scope();
+
+/* scope =
 {
   [key] : { value, frozen }
 }
+*/
 ```
-
-Returns {Object}
 
 ### static save()
 
@@ -125,10 +154,24 @@ Returns the current Flow handle for later restoration.
 
 Returns {FlowHandle}
 
+```js
+let flow_handle = Flow.save();
+```
+
 ### static restore( FlowHandle, callback )
 
-Restores the stored Flow and dispatches the callback. Flow can be restored by calling restore method on FlowHandle as well. Each FlowHandle can be restored only once.
+Restores the stored Flow and dispatches the callback. Flow can be restored by calling restore method on FlowHandle as well. Each FlowHandle can be restored only once - multiple restorations throws an Exception.
 
 ```js
-flow_handle.restore( callback );
+Flow.restore( flow_handle, () =>
+{
+	// Flow is restored
+});
+```
+
+```js
+flow_handle.restore( () =>
+{
+	// Flow is restored
+});
 ```
