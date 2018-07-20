@@ -11,9 +11,13 @@ it( 'Sub Flow - frozen', ( done ) =>
 
 	let parent_scope = { parent: { value: Math.random() } };
 
+	assert.ok( Flow.started === false, 'Flow scope should not be started' );
+
 	Flow.start( () =>
 	{
 		verifyFlowID();
+
+		assert.ok( Flow.started === true, 'Flow scope should be started' );
 
 		assert.deepStrictEqual( parent_scope.parent, Flow.get('parent'), 'Parent Flow value mismatch');
 		assert.ok( Object.isFrozen( Flow.get('parent') ) === true, 'Flow scope int value not frozen');
