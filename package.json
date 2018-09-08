@@ -1,7 +1,7 @@
 {
   "name": "liqd-flow",
   "description": "Flow: Track asynchronous application flow and access flow context variables",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "author": "radixxko",
   "license": "MIT",
   "main": "lib/flow.js",
@@ -20,6 +20,7 @@
     "flow",
     "scope",
     "async",
+	"context",
     "liqd"
   ],
   "dependencies": {},

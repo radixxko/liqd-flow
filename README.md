@@ -4,10 +4,6 @@
 [![Build Status](https://travis-ci.org/radixxko/liqd-flow.svg?branch=master)](https://travis-ci.org/radixxko/liqd-flow)
 [![Coverage Status](https://coveralls.io/repos/github/radixxko/liqd-flow/badge.svg?branch=master)](https://coveralls.io/github/radixxko/liqd-flow?branch=master)
 
-## Warning
-
-Flow library does not work properly when using async/await on Promises with node v10.0 - v10.3 due to bug in V8 engine.
-
 ## Sneak Peek
 
 This library allows you to create custom asynchronous flow contexts and access its variables in every step of the flow execution.
