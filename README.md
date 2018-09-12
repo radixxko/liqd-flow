@@ -1,8 +1,10 @@
 # Flow: Track asynchronous application flow and access flow context variables
 
-[![Version npm](https://img.shields.io/npm/v/liqd-flow.svg)](https://www.npmjs.com/package/liqd-flow)
+[![NPM version](https://img.shields.io/npm/v/liqd-flow.svg)](https://www.npmjs.com/package/liqd-flow)
 [![Build Status](https://travis-ci.org/radixxko/liqd-flow.svg?branch=master)](https://travis-ci.org/radixxko/liqd-flow)
 [![Coverage Status](https://coveralls.io/repos/github/radixxko/liqd-flow/badge.svg?branch=master)](https://coveralls.io/github/radixxko/liqd-flow?branch=master)
+[![NPM downloads](https://img.shields.io/npm/dm/liqd-flow.svg)](https://www.npmjs.com/package/liqd-flow)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## Sneak Peek
 
