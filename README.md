@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/radixxko/liqd-flow.svg?branch=master)](https://travis-ci.org/radixxko/liqd-flow)
 [![Coverage Status](https://coveralls.io/repos/github/radixxko/liqd-flow/badge.svg?branch=master)](https://coveralls.io/github/radixxko/liqd-flow?branch=master)
 [![NPM downloads](https://img.shields.io/npm/dm/liqd-flow.svg)](https://www.npmjs.com/package/liqd-flow)
+[![Known Vulnerabilities](https://snyk.io/test/github/radixxko/liqd-flow/badge.svg?targetFile=package.json)](https://snyk.io/test/github/radixxko/liqd-flow?targetFile=package.json)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## Sneak Peek
