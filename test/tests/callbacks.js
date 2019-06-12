@@ -210,3 +210,57 @@ it( 'Promises', ( done ) =>
 		setTimeout( dispatcher, 10 );
 	});
 });
+
+it( 'Restore empty scope', ( done ) =>
+{
+	let next = { callback: done, ready: false }; Next( next );
+
+	setImmediate( () =>
+	{
+		verifyFlowID();
+
+		let callbacks = [];
+
+		function dispatcher()
+		{
+			for( let i = 0; i < 20; ++i )
+			{
+				if( callbacks.length )
+				{
+					let callback = callbacks.splice( Math.floor( Math.random() * callbacks.length ), 1 )[0];
+
+					assert.strictEqual( undefined, Flow.get('value'), 'Dispatcher value mismatch before callback' );
+
+					callback();
+
+					assert.strictEqual( undefined, Flow.get('value'), 'Dispatcher value mismatch after callback' );
+				}
+			}
+
+			if( callbacks.length ){ setTimeout( dispatcher, 10 ); }
+			else{ next.ready = true; }
+		}
+
+		function register()
+		{
+			let flow_handle = Flow.save();
+
+			callbacks.push( () =>
+			{
+				assert.strictEqual( undefined, Flow.get('value'), 'Callback value mismatch before restore' );
+
+				flow_handle.restore( () =>
+				{
+					assert.strictEqual( undefined, Flow.get('value'), 'Callback value mismatch after restore' );
+				});
+			});
+		}
+
+		for( let i = 0; i < 500; ++i )
+		{
+			register();
+		}
+
+		setTimeout( dispatcher, 10 );
+	});
+});
