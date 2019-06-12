@@ -1,6 +1,7 @@
 'use strict';
 
 require('./helper/unique_flow_id');
+require('./helper/next');
 
 const assert = require('assert');
 const Flow = require('../../lib/flow');

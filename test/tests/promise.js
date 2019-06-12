@@ -1,6 +1,7 @@
 'use strict';
 
 require('./helper/unique_flow_id');
+require('./helper/next');
 
 const assert = require('assert');
 const Flow = require('../../lib/flow');
@@ -53,7 +54,7 @@ it( 'Promise-then', ( done ) =>
 	{
 		createPromise();
 	}
-});
+});/*
 
 it( 'Promise-catch', ( done ) =>
 {
@@ -160,3 +161,4 @@ it( 'Promise-await', ( done ) =>
 		createPromise();
 	}
 });
+*/
